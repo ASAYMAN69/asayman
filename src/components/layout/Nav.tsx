@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion, useScroll } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll, type Variants } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useActiveSection, SECTION_IDS } from '../../hooks/useActiveSection';
@@ -9,12 +9,34 @@ const navLinks: { id: SectionId; label: string }[] = SECTION_IDS.map((id) => ({
   label: id.charAt(0).toUpperCase() + id.slice(1),
 }));
 
+// Strong ease-out for entrances
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 export function Nav() {
   const activeSection = useActiveSection();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
+
+  // Mobile menu choreography: links cascade in, CTA lands last
+  const menuContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { delayChildren: 0.04, staggerChildren: 0.035 } },
+    exit: { opacity: 0, transition: { staggerChildren: 0.01, staggerDirection: -1 } },
+  };
+
+  const menuItemVariants: Variants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.18, ease: EASE_OUT } },
+    exit: { opacity: 0, transition: { duration: 0.08 } },
+  };
+
+  const menuCtaVariants: Variants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 14, scale: reduceMotion ? 1 : 0.96 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2, ease: EASE_OUT } },
+    exit: { opacity: 0, scale: 0.97, transition: { duration: 0.08 } },
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,7 +57,7 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-4 sm:top-6 z-50 flex justify-center px-4 pointer-events-none">
       <div
-        className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 overflow-hidden ${
+        className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden ${
           menuOpen
             ? 'rounded-3xl border border-white/10 bg-ink-950/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
             : scrolled
@@ -90,31 +112,78 @@ export function Nav() {
         </div>
 
         {/* Mobile toggle */}
-        <button
+        <motion.button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
           aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-300 hover:bg-white/5 md:hidden"
         >
-          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+          <span className="relative flex h-5 w-5">
+            <AnimatePresence initial={false}>
+              {menuOpen ? (
+                <motion.span
+                  key="close"
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ opacity: 0, rotate: reduceMotion ? 0 : -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: reduceMotion ? 0 : 90 }}
+                  transition={{ duration: 0.16, ease: EASE_OUT }}
+                >
+                  <X className="h-5 w-5" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu"
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ opacity: 0, rotate: reduceMotion ? 0 : -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: reduceMotion ? 0 : 90 }}
+                  transition={{ duration: 0.16, ease: EASE_OUT }}
+                >
+                  <Menu className="h-5 w-5" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </span>
+        </motion.button>
         </nav>
 
         {/* Mobile menu */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
+              id="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="md:hidden"
+              exit={{
+                opacity: 0,
+                height: 0,
+                transition: {
+                  opacity: { duration: 0.12 },
+                  height: { duration: 0.15, ease: EASE_OUT },
+                },
+              }}
+              transition={{
+                opacity: { duration: 0.18, ease: EASE_OUT },
+                height: { duration: 0.25, ease: EASE_OUT },
+              }}
+              className="md:hidden overflow-hidden"
             >
-              <div className="flex flex-col gap-1 px-4 pb-4 sm:px-6">
+              <motion.div
+                variants={menuContainerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="flex flex-col gap-1 px-4 pb-4 sm:px-6"
+              >
                 {navLinks.map((link) => (
-                  <a
+                  <motion.a
                     key={link.id}
+                    variants={menuItemVariants}
                     href={`#${link.id}`}
                     onClick={() => setMenuOpen(false)}
                     className={`rounded-md px-3 py-2.5 text-sm transition-colors ${
@@ -122,16 +191,17 @@ export function Nav() {
                     }`}
                   >
                     {link.label}
-                  </a>
+                  </motion.a>
                 ))}
-                <a
+                <motion.a
+                  variants={menuCtaVariants}
                   href="#contact"
                   onClick={() => setMenuOpen(false)}
                   className="mt-2 rounded-md bg-accent-400 px-3 py-2.5 text-center text-sm font-semibold text-ink-950"
                 >
                   Get in touch
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
