@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useActiveSection, SECTION_IDS } from '../../hooks/useActiveSection';
 import type { SectionId } from '../../hooks/useActiveSection';
+import NavGlass from './NavGlass';
 
 const navLinks: { id: SectionId; label: string }[] = SECTION_IDS.map((id) => ({
   id,
@@ -65,8 +66,9 @@ export function Nav() {
             : 'rounded-full border border-white/5 bg-ink-950/30 backdrop-blur-xl'
         }`}
       >
+        <NavGlass mode="lens" />
         {!reduceMotion && (
-          <div className="absolute inset-x-0 top-0 h-[2px]">
+          <div className="absolute inset-x-0 top-0 h-[2px] z-10">
             <motion.span
               aria-hidden="true"
               className="absolute inset-0 origin-left bg-gradient-to-r from-accent-500 via-accent-400 to-accent-500"
@@ -74,7 +76,7 @@ export function Nav() {
             />
           </div>
         )}
-        <nav className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary">
+        <nav className="relative z-10 flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary">
           {/* Wordmark */}
         <a href="#top" className="flex items-center gap-2.5 text-zinc-100" aria-label="AS Ayman — back to top">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-400/10 font-mono text-sm font-semibold text-accent-300 ring-1 ring-accent-400/30">
@@ -171,7 +173,7 @@ export function Nav() {
                 opacity: { duration: 0.18, ease: EASE_OUT },
                 height: { duration: 0.25, ease: EASE_OUT },
               }}
-              className="md:hidden overflow-hidden"
+              className="relative z-10 md:hidden overflow-hidden"
             >
               <motion.div
                 variants={menuContainerVariants}
