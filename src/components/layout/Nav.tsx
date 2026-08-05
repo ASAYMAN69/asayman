@@ -91,7 +91,11 @@ export function Nav() {
         )}
         <nav className="relative z-10 flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary">
           {/* Wordmark */}
-        <a href="#top" className="text-sm font-semibold tracking-tight text-zinc-100" aria-label="Ayman — back to top">
+        <a
+          href="#top"
+          className="font-serif text-base font-medium tracking-tight text-zinc-100"
+          aria-label="Ayman — back to top"
+        >
           Ayman
         </a>
 
