@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useActiveSection, SECTION_IDS } from '../../hooks/useActiveSection';
 import type { SectionId } from '../../hooks/useActiveSection';
-import NavGlass from './NavGlass';
+import GlassSurface from '../GlassSurface';
 
 const navLinks: { id: SectionId; label: string }[] = SECTION_IDS.map((id) => ({
   id,
@@ -60,13 +60,26 @@ export function Nav() {
       <div
         className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden ${
           menuOpen
-            ? 'rounded-3xl border border-white/10 bg-ink-950/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+            ? 'rounded-3xl border border-white/10 bg-ink-950/80 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
             : scrolled
-            ? 'rounded-full border border-white/10 bg-ink-950/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
-            : 'rounded-full border border-white/5 bg-ink-950/30 backdrop-blur-xl'
+            ? 'rounded-full border border-white/10 bg-ink-950/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+            : 'rounded-full border border-white/5 bg-ink-950/30'
         }`}
       >
-        <NavGlass mode="lens" />
+        {/* Liquid glass background: SVG-filter distortion over the page content behind the pill */}
+        <GlassSurface
+          width="100%"
+          height="100%"
+          borderRadius={32}
+          brightness={9}
+          opacity={0.88}
+          displace={0.3}
+          distortionScale={-40}
+          redOffset={0}
+          greenOffset={6}
+          blueOffset={12}
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
+        />
         {!reduceMotion && (
           <div className="absolute inset-x-0 top-0 h-[2px] z-10">
             <motion.span
