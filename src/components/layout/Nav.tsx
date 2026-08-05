@@ -58,19 +58,19 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-4 sm:top-6 z-50 flex justify-center px-4 pointer-events-none">
       <div
-        className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden ${
+        className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden rounded-3xl ${
           menuOpen
-            ? 'rounded-3xl border border-white/10 bg-ink-950/80 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+            ? 'border border-white/10 bg-ink-950/80 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
             : scrolled
-            ? 'rounded-full border border-white/10 bg-ink-950/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
-            : 'rounded-full border border-white/5 bg-ink-950/30'
+            ? 'border border-white/10 bg-ink-950/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+            : 'border border-white/5 bg-ink-950/30'
         }`}
       >
         {/* Liquid glass background: SVG-filter distortion over the page content behind the pill */}
         <GlassSurface
           width="100%"
           height="100%"
-          borderRadius={32}
+          borderRadius={24}
           brightness={9}
           opacity={0.88}
           displace={0.3}
@@ -172,22 +172,23 @@ export function Nav() {
           {menuOpen && (
             <motion.div
               id="mobile-menu"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{
-                opacity: 0,
-                height: 0,
-                transition: {
-                  opacity: { duration: 0.12 },
-                  height: { duration: 0.15, ease: EASE_OUT },
-                },
-              }}
-              transition={{
-                opacity: { duration: 0.18, ease: EASE_OUT },
-                height: { duration: 0.25, ease: EASE_OUT },
-              }}
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0, transition: { height: { duration: 0.25, ease: EASE_OUT } } }}
+              transition={{ height: { duration: 0.3, ease: EASE_OUT } }}
               className="relative z-10 md:hidden overflow-hidden"
             >
+              {/* Garage-door panel: a solid shutter covering the menu that slides up to reveal the links */}
+              {!reduceMotion && (
+                <motion.div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-full border-b border-white/10 bg-ink-950/90"
+                  initial={{ y: 0 }}
+                  animate={{ y: '-100%' }}
+                  exit={{ y: 0, transition: { duration: 0.25, ease: EASE_OUT } }}
+                  transition={{ duration: 0.3, ease: EASE_OUT }}
+                />
+              )}
               <motion.div
                 variants={menuContainerVariants}
                 initial="hidden"
