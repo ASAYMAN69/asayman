@@ -1,19 +1,21 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 import { Reveal } from './Reveal';
 
 interface SectionHeadingProps {
   eyebrow: string;
   title: string;
-  description?: string;
+  description?: ReactNode;
+  className?: string;
 }
 
 /** Section header with a staggered eyebrow/title and an accent rule that draws in. */
-export function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
+export function SectionHeading({ eyebrow, title, description, className = 'mb-12' }: SectionHeadingProps) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="mb-12 max-w-2xl">
+    <div className={`max-w-2xl ${className}`}>
       <Reveal delay={0}>
         <p className="mb-3 font-mono text-xs font-medium tracking-[0.25em] text-accent-400 uppercase">
           {eyebrow}

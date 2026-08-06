@@ -53,7 +53,6 @@ export default function TrueFocus({
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [measured, setMeasured] = useState(false);
-  const [reservedWordWidth, setReservedWordWidth] = useState<number | null>(null);
 
   useEffect(() => {
     if (manualMode || activeSentences) return;
@@ -84,7 +83,9 @@ export default function TrueFocus({
     if (!container || !activeWord) return;
 
     const parentRect = container.getBoundingClientRect();
-    const activeRect = activeWord.getBoundingClientRect();
+    const activeInner = activeWord?.querySelector<HTMLElement>('.focus-word-inner') ?? activeWord;
+    if (!activeInner) return;
+    const activeRect = activeInner.getBoundingClientRect();
     setFocusRect({
       x: activeRect.left - parentRect.left,
       y: activeRect.top - parentRect.top,
@@ -92,11 +93,6 @@ export default function TrueFocus({
       height: activeRect.height,
     });
     setMeasured(true);
-    // Reserve the widest focused word so the line layout never reflows when
-    // the focused word swaps to a shorter one (prevents mobile line jumps).
-    if (activeSentences) {
-      setReservedWordWidth((prev) => (prev === null || activeRect.width > prev ? activeRect.width : prev));
-    }
   }, [activeIndex, words.join(separator)]);
 
   const handleMouseEnter = (index: number) => {
@@ -114,18 +110,12 @@ export default function TrueFocus({
       {words.map((word, index) => {
         const isActive = index === activeIndex;
         const isSplitWord = isActive && activeSentences && sequenceIndex > 0;
+        const isLastWord = !!activeSentences && index === words.length - 1;
         const wordStyle = {
           filter: isActive ? 'blur(0px)' : `blur(${blurAmount}px)`,
           '--border-color': borderColor,
           '--glow-color': glowColor,
           transition: `filter ${animationDuration}s ease`,
-          ...(isActive && activeSentences && reservedWordWidth != null
-            ? {
-                minWidth: `${reservedWordWidth}px`,
-                display: 'inline-flex',
-                justifyContent: 'center',
-              }
-            : {}),
         } as CSSProperties;
 
         return (
@@ -134,32 +124,34 @@ export default function TrueFocus({
             ref={(el) => {
               wordRefs.current[index] = el;
             }}
-            className={`focus-word ${isActive ? 'active' : ''}`}
+            className={`focus-word ${isActive ? 'active' : ''} ${isLastWord ? 'last-word' : ''}`}
             style={wordStyle}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            {isSplitWord ? (
-              <span className="word-letters" key={`letters-${sequenceIndex}`}>
-                {word.split('').map((ch, li) => (
-                  <motion.span
-                    key={`${ch}-${li}`}
-                    className="word-letter"
-                    initial={{ opacity: 0, y: '0.5em' }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: animationDuration,
-                      delay: li * 0.02,
-                      ease: 'easeOut',
-                    }}
-                  >
-                    {ch}
-                  </motion.span>
-                ))}
-              </span>
-            ) : (
-              word
-            )}
+            <span className="focus-word-inner">
+              {isSplitWord ? (
+                <span className="word-letters" key={`letters-${sequenceIndex}`}>
+                  {word.split('').map((ch, li) => (
+                    <motion.span
+                      key={`${ch}-${li}`}
+                      className="word-letter"
+                      initial={{ opacity: 0, y: '0.5em' }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: animationDuration,
+                        delay: li * 0.02,
+                        ease: 'easeOut',
+                      }}
+                    >
+                      {ch}
+                    </motion.span>
+                  ))}
+                </span>
+              ) : (
+                word
+              )}
+            </span>
           </span>
         );
       })}

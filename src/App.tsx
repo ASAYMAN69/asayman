@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Footer } from './components/layout/Footer';
 import { IntroOverlay } from './components/layout/IntroOverlay';
 import { Nav } from './components/layout/Nav';
@@ -9,9 +10,11 @@ import { Projects } from './components/sections/Projects';
 import { Skills } from './components/sections/Skills';
 
 export default function App() {
+  const [introDone, setIntroDone] = useState(false);
+
   return (
     <>
-      <IntroOverlay />
+      <IntroOverlay onReveal={() => setIntroDone(true)} />
 
       {/* Accessibility: skip straight to content */}
       <a
@@ -24,7 +27,7 @@ export default function App() {
       <Nav />
 
       <main id="main">
-        <Hero />
+        <Hero introDone={introDone} />
         <About />
         <Skills />
         <Projects />

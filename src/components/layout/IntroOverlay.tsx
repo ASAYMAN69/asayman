@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BlurText from '../ui/BlurText';
 import TrueFocus from '../ui/TrueFocus';
 
@@ -18,10 +18,20 @@ type IntroStage = 'blur' | 'focus';
  * on "business?". After BUSINESS_DELAY_MS the focused word letter-splits to
  * "profile", waits, then repeats into "AI", then the curtain lifts.
  */
-export function IntroOverlay() {
+export function IntroOverlay({ onReveal }: { onReveal?: () => void }) {
   const [stage, setStage] = useState<IntroStage>('blur');
   const [visible, setVisible] = useState(true);
   const reduceMotion = useReducedMotion();
+  const revealedRef = useRef(false);
+
+  // Signal the page the moment the curtain starts lifting so hero sequences
+  // (e.g. the ASCII decrypt) begin while the exit animation is still running.
+  useEffect(() => {
+    if (!visible && !revealedRef.current) {
+      revealedRef.current = true;
+      onReveal?.();
+    }
+  }, [visible, onReveal]);
 
   // Lock scroll while the intro is on screen; release the moment it hides so
   // the site scrolls during the curtain exit instead of after the unmount.

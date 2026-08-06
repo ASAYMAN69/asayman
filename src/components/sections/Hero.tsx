@@ -7,15 +7,15 @@ import {
   useTransform,
 } from 'framer-motion';
 import { ArrowRight, Mail, MapPin } from 'lucide-react';
-import type { MouseEvent } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { profile } from '../../data/profile';
+import asciiArt from '../../assets/ascii.txt?raw';
 import { ButtonLink } from '../ui/ButtonLink';
 import { Container } from '../ui/Container';
 import { SocialLinks } from '../ui/SocialLinks';
 
-// Drop `hero.jpg` / `hero.png` etc. into src/assets/photos/ to replace the placeholder frame.
-const heroPhoto = import.meta.glob<string>('../../assets/photos/hero.{jpg,jpeg,png,webp,avif}', {
+// Drop `hero.jpg` / `asayman.jpg` etc. into src/assets/photos/ to replace the placeholder frame.
+const heroPhoto = import.meta.glob<string>('../../assets/photos/{hero,asayman}.{jpg,jpeg,png,webp,avif}', {
   eager: true,
   import: 'default',
 });
@@ -30,8 +30,9 @@ function useFadeUp(delay: number) {
   };
 }
 
-export function Hero() {
+export function Hero({ introDone = false }: { introDone?: boolean }) {
   const reduceMotion = useReducedMotion();
+  const [showPhoto, setShowPhoto] = useState(false);
   const glowX = useMotionValue(-400);
   const glowY = useMotionValue(-400);
   const glare = useMotionTemplate`radial-gradient(620px circle at ${glowX}px ${glowY}px, rgba(52,211,153,0.10), transparent 70%)`;
@@ -46,6 +47,16 @@ export function Hero() {
     glowX.set(event.clientX - rect.left);
     glowY.set(event.clientY - rect.top);
   };
+
+  useEffect(() => {
+    if (!introDone) return;
+    if (reduceMotion) {
+      setShowPhoto(true);
+      return;
+    }
+    const id = window.setTimeout(() => setShowPhoto(true), 800);
+    return () => window.clearTimeout(id);
+  }, [introDone, reduceMotion]);
 
   return (
     <section
@@ -107,33 +118,79 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Photo / placeholder frame */}
+        {/* Photo / ASCII decrypt frame */}
         <motion.div {...useFadeUp(0.2)} className="mx-auto w-full max-w-sm lg:max-w-none">
           <div className="relative">
             <div
               aria-hidden="true"
               className="absolute -inset-3 rounded-3xl bg-gradient-to-tr from-accent-500/15 via-transparent to-transparent blur-2xl"
             />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-ink-900">
-              {heroPhotoSrc ? (
-                <img
-                  src={heroPhotoSrc}
-                  alt={`Portrait of ${profile.name}`}
-                  className="h-full w-full object-cover"
-                  loading="eager"
-                />
-              ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-8 text-center">
-                  <span className="flex h-20 w-20 items-center justify-center rounded-full bg-accent-400/10 font-mono text-3xl font-semibold text-accent-300 ring-1 ring-accent-400/30">
-                    {profile.firstName}
-                  </span>
-                  <p className="text-sm text-zinc-500">
-                    Your photo goes here —
-                    <br />
-                    add <span className="font-mono text-xs text-zinc-400">src/assets/photos/hero.jpg</span>
-                  </p>
-                </div>
+            <div className="@container relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-ink-900">
+              {/* ASCII art layer — shown while the intro curtain lifts */}
+              {introDone && !reduceMotion && (
+                <motion.div
+                  aria-hidden={showPhoto}
+                  className="absolute inset-0 flex items-center justify-center p-1"
+                  initial={false}
+                  animate={{ opacity: showPhoto ? 0 : 1 }}
+                  transition={{ duration: 0.45, ease: 'easeInOut' }}
+                >
+                  <pre
+                    className="font-mono text-zinc-300"
+                    style={{ fontSize: 'calc(100cqw / 92)', lineHeight: 1 }}
+                  >
+                    {asciiArt}
+                  </pre>
+                </motion.div>
               )}
+
+              {/* Photo reveal layer */}
+              <motion.div
+                aria-hidden={!showPhoto}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: showPhoto ? 1 : 0 }}
+                transition={{ duration: 0.8, ease: 'easeInOut' }}
+              >
+                {heroPhotoSrc ? (
+                  <img
+                    src={heroPhotoSrc}
+                    alt={`Portrait of ${profile.name}`}
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                  />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-8 text-center">
+                    <span className="flex h-20 w-20 items-center justify-center rounded-full bg-accent-400/10 font-mono text-3xl font-semibold text-accent-300 ring-1 ring-accent-400/30">
+                      {profile.firstName}
+                    </span>
+                    <p className="text-sm text-zinc-500">
+                      Your photo goes here —
+                      <br />
+                      add <span className="font-mono text-xs text-zinc-400">src/assets/photos/asayman.jpg</span>
+                    </p>
+                  </div>
+                )}
+
+                {/* Top-left → bottom-right sheen on reveal */}
+                {showPhoto && !reduceMotion && (
+                  <motion.div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-1/2"
+                    style={{
+                      background:
+                        'linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.35) 50%, transparent 58%)',
+                    }}
+                    initial={{ x: '-60%', y: '-60%', opacity: 0 }}
+                    animate={{ x: '60%', y: '60%', opacity: [1, 1, 0] }}
+                    transition={{
+                      duration: 1.2,
+                      ease: [0.22, 0.61, 0.36, 1],
+                      opacity: { times: [0.15, 0.8, 1] },
+                    }}
+                  />
+                )}
+              </motion.div>
             </div>
 
             {/* Availability badge */}

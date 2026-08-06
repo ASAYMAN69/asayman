@@ -21,6 +21,10 @@
   user-select: none;
 }
 
+.focus-word-inner {
+  display: inline-block;
+}
+
 .focus-word.active {
   filter: blur(0);
 }
@@ -91,4 +95,11 @@
   display: inline-block;
   will-change: transform, opacity;
   white-space: pre;
+}
+
+@media (max-width: 767px) {
+  .intro-focus .focus-word.last-word {
+    flex-basis: 100%;
+    text-align: center;
+  }
 }
