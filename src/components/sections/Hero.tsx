@@ -10,6 +10,7 @@ import { ArrowRight, Mail, MapPin } from 'lucide-react';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { profile } from '../../data/profile';
 import asciiArt from '../../assets/ascii.txt?raw';
+import DecryptedText from '../DecryptedText';
 import { ButtonLink } from '../ui/ButtonLink';
 import { Container } from '../ui/Container';
 import { SocialLinks } from '../ui/SocialLinks';
@@ -20,6 +21,7 @@ const heroPhoto = import.meta.glob<string>('../../assets/photos/{hero,asayman}.{
   import: 'default',
 });
 const heroPhotoSrc = Object.values(heroPhoto)[0];
+const PHOTO_FADE_MS = 800;
 
 function useFadeUp(delay: number) {
   const reduceMotion = useReducedMotion();
@@ -33,6 +35,7 @@ function useFadeUp(delay: number) {
 export function Hero({ introDone = false }: { introDone?: boolean }) {
   const reduceMotion = useReducedMotion();
   const [showPhoto, setShowPhoto] = useState(false);
+  const [badgeVisible, setBadgeVisible] = useState(false);
   const glowX = useMotionValue(-400);
   const glowY = useMotionValue(-400);
   const glare = useMotionTemplate`radial-gradient(620px circle at ${glowX}px ${glowY}px, rgba(52,211,153,0.10), transparent 70%)`;
@@ -58,6 +61,12 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
     return () => window.clearTimeout(id);
   }, [introDone, reduceMotion]);
 
+  useEffect(() => {
+    if (!showPhoto) return;
+    const id = window.setTimeout(() => setBadgeVisible(true), PHOTO_FADE_MS);
+    return () => window.clearTimeout(id);
+  }, [showPhoto]);
+
   return (
     <section
       id="top"
@@ -75,18 +84,11 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
       <motion.div style={{ y: reduceMotion ? 0 : contentY, opacity: reduceMotion ? 1 : contentOpacity }} className="relative w-full">
         <Container className="relative grid items-center gap-14 lg:grid-cols-[1.2fr_0.8fr]">
         <div>
-          <motion.p
-            {...useFadeUp(0)}
-            className="mb-5 font-mono text-xs font-medium tracking-[0.25em] text-accent-400 uppercase"
-          >
-            AI Automation Entrepreneur · Full-Stack Engineer
-          </motion.p>
-
           <motion.h1
             {...useFadeUp(0.08)}
             className="text-5xl font-semibold tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl"
           >
-            {profile.name}
+            I'm <span className="font-serif">{profile.name}</span>
           </motion.h1>
 
           <motion.p {...useFadeUp(0.16)} className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400">
@@ -150,7 +152,7 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
                 className="absolute inset-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: showPhoto ? 1 : 0 }}
-                transition={{ duration: 0.8, ease: 'easeInOut' }}
+                transition={{ duration: PHOTO_FADE_MS / 1000, ease: 'easeInOut' }}
               >
                 {heroPhotoSrc ? (
                   <img
@@ -193,16 +195,25 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
               </motion.div>
             </div>
 
-            {/* Availability badge */}
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-ink-800 px-4 py-1.5 text-xs text-zinc-200 shadow-lg shadow-black/40">
-                <span className="relative flex h-2 w-2" aria-hidden="true">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
+            {/* Greeting badge — appears once the photo has fully faded in */}
+            {badgeVisible && (
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+                <span className="inline-flex items-center rounded-full border border-white/10 bg-ink-800 px-4 py-1.5 text-xs text-zinc-200 shadow-lg shadow-black/40">
+                  {reduceMotion ? (
+                    <span>Hi there :D</span>
+                  ) : (
+                    <DecryptedText
+                      text="Hi there :D"
+                      animateOn="view"
+                      sequential
+                      revealDirection="center"
+                      speed={40}
+                      encryptedClassName="text-zinc-500"
+                    />
+                  )}
                 </span>
-                {profile.availability}
-              </span>
-            </div>
+              </div>
+            )}
           </div>
         </motion.div>
       </Container>
