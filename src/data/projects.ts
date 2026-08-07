@@ -12,9 +12,8 @@ export interface MoreWorkItem {
   name: string;
   description: string;
   stack: string;
+  github?: string;
 }
-
-const GITHUB_PROFILE = 'https://github.com/ASAYMAN69';
 
 export const featuredProjects: Project[] = [
   {
@@ -28,7 +27,6 @@ export const featuredProjects: Project[] = [
       'Cloudflare Turnstile auth and email verification onboarding',
     ],
     stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'NVIDIA GLM-4.7', 'Serper API'],
-    github: GITHUB_PROFILE,
   },
   {
     name: 'Retain CRM',
@@ -41,7 +39,6 @@ export const featuredProjects: Project[] = [
       'RAG-ready Supabase backend with a React admin dashboard',
     ],
     stack: ['Node.js', 'Express', 'Supabase', 'React', 'Gemini', 'NVIDIA NIM', 'Vector DB'],
-    github: GITHUB_PROFILE,
   },
   {
     name: 'BTW',
@@ -54,7 +51,7 @@ export const featuredProjects: Project[] = [
       'AI-agent-native, npm-ready, cross-platform (Windows / macOS / Linux)',
     ],
     stack: ['TypeScript', 'Playwright', 'Express', 'WebSockets', 'Chrome Extension'],
-    github: GITHUB_PROFILE,
+    github: 'https://github.com/ASAYMAN69/btw',
   },
   {
     name: 'Invoiza',
@@ -68,7 +65,7 @@ export const featuredProjects: Project[] = [
     ],
     stack: ['Node.js', 'Express', 'Puppeteer', 'HTML5/CSS3', 'Vanilla JS'],
     live: 'https://invoiza.solven.app',
-    github: GITHUB_PROFILE,
+    github: 'https://github.com/ASAYMAN69/invoiza',
   },
   {
     name: 'Newzzy',
@@ -81,7 +78,6 @@ export const featuredProjects: Project[] = [
       'Verification workspace for journalists plus analytics dashboards',
     ],
     stack: ['Next.js', 'React', 'Express', 'PostgreSQL 18', 'Tailwind CSS'],
-    github: GITHUB_PROFILE,
   },
   {
     name: 'Statesy',
@@ -94,7 +90,6 @@ export const featuredProjects: Project[] = [
       'SEO-optimized Next.js frontend with Tailwind',
     ],
     stack: ['Next.js', 'Express', 'TypeScript', 'Redis', 'PostgreSQL', 'Prisma'],
-    github: GITHUB_PROFILE,
   },
 ];
 
@@ -103,6 +98,7 @@ export const moreWork: MoreWorkItem[] = [
     name: 'ImageCurry',
     description: 'High-performance C++17 image server — automated WebP compression, UUID storage, ETag caching.',
     stack: 'C++17 · ImageMagick · Sockets',
+    github: 'https://github.com/ASAYMAN69/imagecurry',
   },
   {
     name: 'JIP',
@@ -113,16 +109,19 @@ export const moreWork: MoreWorkItem[] = [
     name: 'Sniffer',
     description: 'Real-time API traffic monitor with AI-driven security and performance analysis via Gemini.',
     stack: 'Node.js · Express · WebSockets · Gemini API',
+    github: 'https://github.com/ASAYMAN69/sniffer',
   },
   {
     name: 'Consoul',
     description: 'Browser-based Unix terminal — persistent VFS, piping, nano & vim, 30+ built-in utilities.',
     stack: 'Vanilla JS · ES Modules · localStorage',
+    github: 'https://github.com/ASAYMAN69/consoul',
   },
   {
     name: 'Poro',
     description: 'Educational portal — homework tracking, routines, and faculty directories via n8n orchestration.',
     stack: 'Vanilla JS · n8n · Modular CSS',
+    github: 'https://github.com/ASAYMAN69/poro',
   },
   {
     name: 'RealEsts CRM',
@@ -133,10 +132,12 @@ export const moreWork: MoreWorkItem[] = [
     name: 'Enosis',
     description: 'Corporate real estate portal with live listings served through Cloudflare Workers.',
     stack: 'Vanilla JS · Cloudflare Workers · Edge Computing',
+    github: 'https://github.com/ASAYMAN69/enosis',
   },
   {
     name: 'ACC Business Club',
     description: 'Official web platform for a 500+ member business club — resources, challenges, community.',
     stack: 'HTML5 · CSS3 · Vanilla JS · SEO structured data',
+    github: 'https://github.com/ASAYMAN69/accbusinessclub',
   },
 ];

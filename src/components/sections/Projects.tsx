@@ -8,9 +8,10 @@ import { SpotlightCard } from '../ui/SpotlightCard';
 
 export function Projects() {
   return (
-    <section id="projects" className="scroll-mt-24 py-24">
+    <section id="projects" aria-labelledby="projects-heading" className="scroll-mt-24 py-24">
       <Container>
         <SectionHeading
+          id="projects-heading"
           eyebrow="Projects"
           title="Selected work."
           description="Production systems and platforms I've designed and shipped — from AI SaaS products to real-time infrastructure."
@@ -32,7 +33,7 @@ export function Projects() {
                         target="_blank"
                         rel="noreferrer noopener"
                         aria-label={`${project.name} on GitHub`}
-                        className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/[0.04] hover:text-zinc-100"
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-white/[0.04] hover:text-zinc-100"
                       >
                         <Github className="h-4 w-4" aria-hidden="true" />
                       </a>
@@ -43,7 +44,7 @@ export function Projects() {
                         target="_blank"
                         rel="noreferrer noopener"
                         aria-label={`Open ${project.name} live site`}
-                        className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/[0.04] hover:text-zinc-100"
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-white/[0.04] hover:text-zinc-100"
                       >
                         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                       </a>
@@ -86,7 +87,22 @@ export function Projects() {
           {moreWork.map((item, index) => (
             <Reveal key={item.name} delay={(index % 4) * 0.05}>
               <SpotlightCard className="h-full rounded-xl border border-white/[0.08] bg-ink-900/40 p-5 transition-colors duration-200 hover:border-white/[0.16]">
-                <h4 className="text-sm font-semibold text-zinc-100">{item.name}</h4>
+                <h4 className="text-sm font-semibold text-zinc-100">
+                  {item.github ? (
+                    <a
+                      href={item.github}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={`${item.name} on GitHub`}
+                      className="inline-flex items-center gap-1 transition-colors hover:text-accent-300"
+                    >
+                      {item.name}
+                      <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    item.name
+                  )}
+                </h4>
                 <p className="mt-1.5 text-xs leading-relaxed text-zinc-500">{item.description}</p>
                 <p className="mt-3 font-mono text-[10px] tracking-wide text-zinc-600">{item.stack}</p>
               </SpotlightCard>
