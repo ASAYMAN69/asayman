@@ -19,6 +19,7 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="AS Ayman" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="AS Ayman — AI Automation Entrepreneur &amp; Full-Stack Engineer" />
     <meta
       property="og:description"
@@ -26,6 +27,9 @@
     />
     <meta property="og:url" content="https://asayman.xyz/" />
     <meta property="og:image" content="https://asayman.xyz/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AS Ayman — AI automation entrepreneur and full-stack engineer." />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -35,12 +39,13 @@
       content="Building AI chatbots, CRMs, and automation systems that run businesses. Founder of Solven.app."
     />
     <meta name="twitter:image" content="https://asayman.xyz/og-image.png" />
+    <meta name="twitter:image:alt" content="AS Ayman — AI automation entrepreneur and full-stack engineer." />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500..600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500..900&display=swap"
       rel="stylesheet"
     />
 
@@ -48,15 +53,34 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
+        "@id": "https://asayman.xyz/#person",
         "@type": "Person",
         "name": "AS Ayman",
         "url": "https://asayman.xyz/",
+        "image": "https://asayman.xyz/og-image.png",
         "email": "mailto:asayman669@gmail.com",
         "jobTitle": "AI Automation Entrepreneur & Full-Stack Engineer",
+        "description": "Founder of Solven.app — an AI automation agency building chatbots, CRMs, and workflow automation for businesses. Backend, infrastructure, and cybersecurity focused.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Dhaka",
+          "addressCountry": "BD"
+        },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Adamjee Cantonment College"
+        },
+        "knowsAbout": [
+          "AI automation",
+          "Chatbots",
+          "CRM systems",
+          "Backend engineering",
+          "Cloud infrastructure",
+          "Cybersecurity",
+          "LLM orchestration"
+        ],
         "worksFor": {
-          "@type": "Organization",
-          "name": "Solven.app",
-          "url": "https://solven.app"
+          "@id": "https://asayman.xyz/#organization"
         },
         "sameAs": [
           "https://github.com/ASAYMAN69",
@@ -65,6 +89,35 @@
           "https://www.facebook.com/asayman22",
           "https://wa.me/+8801812207007"
         ]
+      }
+    </script>
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@id": "https://asayman.xyz/#organization",
+        "@type": "Organization",
+        "name": "Solven.app",
+        "url": "https://solven.app",
+        "description": "AI automation agency building custom chatbots, conversational CRMs, and workflow automation systems for businesses."
+      }
+    </script>
+
+    <!-- Structured Data: ProfilePage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "name": "AS Ayman — AI Automation Entrepreneur & Full-Stack Engineer",
+        "url": "https://asayman.xyz/",
+        "description": "Portfolio of AS Ayman — AI automation entrepreneur and full-stack engineer. Founder of Solven.app.",
+        "about": {
+          "@id": "https://asayman.xyz/#person"
+        },
+        "mainEntity": {
+          "@id": "https://asayman.xyz/#person"
+        }
       }
     </script>
 
@@ -78,9 +131,103 @@
         "description": "Personal portfolio of AS Ayman — AI automation entrepreneur and full-stack engineer."
       }
     </script>
+
+    <!-- Structured Data: Featured Projects -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Featured projects",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Bottist",
+              "description": "Turn any website into an AI-powered chatbot in minutes.",
+              "applicationCategory": "WebApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Retain CRM",
+              "description": "Conversational AI CRM that automates real-estate lead qualification.",
+              "applicationCategory": "BusinessApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "BTW",
+              "description": "Browser automation as a simple HTTP request, built for AI agents.",
+              "applicationCategory": "DeveloperApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Invoiza",
+              "description": "Professional invoice generation used by 100+ businesses.",
+              "url": "https://invoiza.solven.app",
+              "applicationCategory": "BusinessApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Newzzy",
+              "description": "Media credibility platform that scores news and fights misinformation.",
+              "applicationCategory": "WebApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Statesy",
+              "description": "End-to-end real estate platform built as a distributed monorepo.",
+              "applicationCategory": "WebApplication"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Static fallback for crawlers / users without JavaScript -->
+    <noscript>
+      <div style="max-width: 42rem; margin: 0 auto; padding: 3rem 1.5rem; font-family: system-ui, sans-serif; color: #18181b">
+        <h1>AS Ayman — AI Automation Entrepreneur &amp; Full-Stack Engineer</h1>
+        <p>
+          I design and build AI-driven systems that automate how businesses operate — from chatbots and
+          conversational CRMs to document engines and real-time infrastructure.
+        </p>
+        <p>Founder of Solven.app. 10+ agency clients across real estate, car rental, and consultancy.</p>
+        <p>
+          On this site:
+          <a href="#about">About</a> ·
+          <a href="#skills">Skills</a> ·
+          <a href="#projects">Projects</a> ·
+          <a href="#gallery">Gallery</a> ·
+          <a href="#contact">Contact</a>
+        </p>
+        <p>Email: <a href="mailto:asayman669@gmail.com">asayman669@gmail.com</a></p>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
