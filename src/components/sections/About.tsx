@@ -23,9 +23,10 @@ const parsedStats = profile.stats.map((stat) => {
 
 export function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-24">
+    <section id="about" aria-labelledby="about-heading" className="scroll-mt-24 py-24">
       <Container>
         <SectionHeading
+          id="about-heading"
           eyebrow="About"
           title="Building systems that run businesses."
           description="A short look at who I am, what I build, and the track record behind it."

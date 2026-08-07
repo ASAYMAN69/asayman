@@ -10,9 +10,10 @@ import { SpotlightCard } from '../ui/SpotlightCard';
 
 export function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-24">
+    <section id="contact" aria-labelledby="contact-heading" className="scroll-mt-24 py-24">
       <Container>
         <SectionHeading
+          id="contact-heading"
           eyebrow="Contact"
           title="Let's build something."
           description="Whether it's an automation system, a product, or a collaboration — my inbox is open."

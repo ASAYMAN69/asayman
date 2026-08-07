@@ -40,9 +40,10 @@ export function Gallery() {
   }, [selected, close, step]);
 
   return (
-    <section id="gallery" className="scroll-mt-24 py-24">
+    <section id="gallery" aria-labelledby="gallery-heading" className="scroll-mt-24 py-24">
       <Container>
         <SectionHeading
+          id="gallery-heading"
           eyebrow="Gallery"
           title="Beyond the code."
           description="A few frames from competitions, events, and the work in between."

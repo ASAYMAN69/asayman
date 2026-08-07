@@ -7,11 +7,12 @@ interface SectionHeadingProps {
   eyebrow: string;
   title: string;
   description?: ReactNode;
+  id?: string;
   className?: string;
 }
 
 /** Section header with a staggered eyebrow/title and an accent rule that draws in. */
-export function SectionHeading({ eyebrow, title, description, className = 'mb-12' }: SectionHeadingProps) {
+export function SectionHeading({ eyebrow, title, description, id, className = 'mb-12' }: SectionHeadingProps) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -22,7 +23,7 @@ export function SectionHeading({ eyebrow, title, description, className = 'mb-12
         </p>
       </Reveal>
       <Reveal delay={0.05}>
-        <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">{title}</h2>
+        <h2 id={id} className="text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl">{title}</h2>
         <motion.span
           aria-hidden="true"
           className="mt-3 block h-px origin-left bg-gradient-to-r from-accent-400 to-transparent"
