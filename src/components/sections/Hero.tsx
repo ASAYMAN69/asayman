@@ -1,6 +1,5 @@
 import {
   motion,
-  useMotionTemplate,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -38,7 +37,6 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
   const [badgeVisible, setBadgeVisible] = useState(false);
   const glowX = useMotionValue(-400);
   const glowY = useMotionValue(-400);
-  const glare = useMotionTemplate`radial-gradient(620px circle at ${glowX}px ${glowY}px, rgba(52,211,153,0.10), transparent 70%)`;
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
   const contentY = useTransform(scrollY, [0, 500], [0, -50]);
@@ -74,11 +72,16 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
       onMouseMove={onMouseMove}
       className="relative flex min-h-svh items-center overflow-hidden pt-28 pb-16"
     >
-      {/* Ambient glow that follows the cursor */}
+      {/* Ambient glow that follows the cursor — fixed-size layer translated via transform,
+          so mousemove composites instead of repainting a 1240px background */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-20 -inset-y-24"
-        style={{ background: glare }}
+        className="pointer-events-none absolute -top-[620px] -left-[620px] h-[1240px] w-[1240px] rounded-full"
+        style={{
+          x: glowX,
+          y: glowY,
+          background: 'radial-gradient(620px circle at center, rgba(52,211,153,0.10), transparent 70%)',
+        }}
       />
 
       <motion.div style={{ y: reduceMotion ? 0 : contentY, opacity: reduceMotion ? 1 : contentOpacity }} className="relative w-full">
@@ -160,6 +163,7 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
                     alt={`Portrait of ${profile.name}`}
                     className="h-full w-full object-cover"
                     loading="eager"
+                    decoding="async"
                   />
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-8 text-center">

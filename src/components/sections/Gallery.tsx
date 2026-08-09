@@ -64,6 +64,7 @@ export function Gallery() {
                         src={src}
                         alt={`Gallery photo ${index + 1}`}
                         loading="lazy"
+                        decoding="async"
                         className="aspect-square w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
                       />
                       <span className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -138,6 +139,7 @@ export function Gallery() {
               key={selected}
               src={galleryPhotos[selected]}
               alt={`Gallery photo ${selected + 1}`}
+              decoding="async"
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.25 }}

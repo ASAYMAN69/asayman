@@ -1,6 +1,7 @@
 import { profile } from '../../data/profile';
 import { Container } from '../ui/Container';
 import { SocialLinks } from '../ui/SocialLinks';
+import heart from '../../assets/heart.png';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,8 +11,17 @@ export function Footer() {
       <Container className="flex flex-col items-center gap-6 py-12 sm:flex-row sm:justify-between">
         <div className="text-center sm:text-left">
           <p className="text-sm font-semibold text-zinc-100">{profile.name}</p>
-          <p className="mt-1 text-xs text-zinc-500">
-            © {year} {profile.name}. Built with React &amp; Tailwind.
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-zinc-500 sm:justify-start">
+            © {year} Built with
+            <img
+              src={heart}
+              alt=""
+              aria-hidden="true"
+              className="inline-block h-3.5 w-3.5"
+              loading="lazy"
+              decoding="async"
+            />
+            by {profile.name}
           </p>
         </div>
 

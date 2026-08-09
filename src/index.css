@@ -46,6 +46,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Skip layout + paint for sections far outside the viewport */
+main > section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 ::selection {
   @apply bg-accent-400/20 text-accent-300;
 }

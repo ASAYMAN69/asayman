@@ -4,6 +4,7 @@ import {
   animate,
   motion,
   useAnimationFrame,
+  useInView,
   useMotionValue,
   useReducedMotion,
   useTransform,
@@ -29,11 +30,12 @@ interface OrbitBadgeProps {
   delay: number;
   converge: boolean;
   fade: boolean;
+  paused: boolean;
   reduceMotion: boolean | null;
   onSelect: (node: TechNode) => void;
 }
 
-function OrbitBadge({ node, index, count, radius, speed, delay, converge, fade, reduceMotion, onSelect }: OrbitBadgeProps) {
+function OrbitBadge({ node, index, count, radius, speed, delay, converge, fade, paused, reduceMotion, onSelect }: OrbitBadgeProps) {
   const angleMV = useMotionValue((index / count) * Math.PI * 2);
   const radiusMV = useMotionValue(reduceMotion ? radius : 0);
   const scaleMV = useMotionValue(reduceMotion ? 1 : 0.5);
@@ -42,7 +44,7 @@ function OrbitBadge({ node, index, count, radius, speed, delay, converge, fade, 
   const y = useTransform(() => radiusMV.get() * Math.sin(angleMV.get()));
 
   useAnimationFrame((_, delta) => {
-    if (speed === 0) return;
+    if (speed === 0 || paused) return;
     angleMV.set(angleMV.get() + speed * delta);
   });
 
@@ -81,7 +83,7 @@ function OrbitBadge({ node, index, count, radius, speed, delay, converge, fade, 
     >
       <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/10 bg-ink-900/80 transition-transform duration-200 hover:scale-105">
         {node.icon ? (
-          <img src={node.icon} alt="" className="h-7 w-7" draggable={false} />
+          <img src={node.icon} alt="" className="h-7 w-7" draggable={false} decoding="async" />
         ) : Glyph ? (
           <Glyph className="h-6 w-6 text-accent-300" />
         ) : null}
@@ -114,7 +116,7 @@ function CenterCore({ stage, node, onStart, onBack }: CenterCoreProps) {
         >
           <span className="flex h-20 w-20 items-center justify-center rounded-full border border-accent-400/30 bg-ink-900/90 shadow-[0_0_50px_rgba(16,185,129,0.15)]">
             {node.icon ? (
-              <img src={node.icon} alt="" className="h-10 w-10" draggable={false} />
+              <img src={node.icon} alt="" className="h-10 w-10" draggable={false} decoding="async" />
             ) : ActiveGlyph ? (
               <ActiveGlyph className="h-9 w-9 text-accent-300" />
             ) : null}
@@ -186,6 +188,7 @@ export function TechOrbit() {
   const [fading, setFading] = useState(false);
   const [backing, setBacking] = useState(false);
   const orbitRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(orbitRef, { margin: '200px' });
   const [orbitWidth, setOrbitWidth] = useState(0);
   const timerRef = useRef<number | null>(null);
 
@@ -262,6 +265,7 @@ export function TechOrbit() {
           delay={reduceMotion ? 0 : i * 0.05}
           converge={convergeId === node.id || backing}
           fade={fading && convergeId !== node.id}
+          paused={!inView}
           reduceMotion={reduceMotion}
           onSelect={handleSelect}
         />

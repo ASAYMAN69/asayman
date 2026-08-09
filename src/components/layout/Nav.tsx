@@ -57,8 +57,9 @@ export function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-4 sm:top-6 z-50 flex justify-center px-4 pointer-events-none">
+      <div className="pointer-events-auto relative w-full max-w-4xl">
       <div
-        className={`pointer-events-auto relative w-full max-w-4xl transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden rounded-3xl ${
+        className={`relative w-full transition-all duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] overflow-hidden rounded-3xl ${
           menuOpen
             ? 'border border-white/10 bg-ink-950/80 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
             : scrolled
@@ -167,61 +168,51 @@ export function Nav() {
           </span>
         </motion.button>
         </nav>
+      </div>
 
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {menuOpen && (
+      {/* Mobile menu — separate dropdown below the pill so the glass nav never expands */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-menu"
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
+            className="absolute top-full right-0 left-0 z-10 mt-2 overflow-hidden rounded-3xl border border-white/10 bg-ink-950/90 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-md will-change-[clip-path] md:hidden"
+          >
             <motion.div
-              id="mobile-menu"
-              initial={{ height: 0 }}
-              animate={{ height: 'auto' }}
-              exit={{ height: 0, transition: { height: { duration: 0.25, ease: EASE_OUT } } }}
-              transition={{ height: { duration: 0.3, ease: EASE_OUT } }}
-              className="relative z-10 md:hidden overflow-hidden"
+              variants={menuContainerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="flex flex-col gap-1 px-4 py-4 sm:px-6"
             >
-              {/* Garage-door panel: a solid shutter covering the menu that slides up to reveal the links */}
-              {!reduceMotion && (
-                <motion.div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-full border-b border-white/10 bg-ink-950/90"
-                  initial={{ y: 0 }}
-                  animate={{ y: '-100%' }}
-                  exit={{ y: 0, transition: { duration: 0.25, ease: EASE_OUT } }}
-                  transition={{ duration: 0.3, ease: EASE_OUT }}
-                />
-              )}
-              <motion.div
-                variants={menuContainerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="flex flex-col gap-1 px-4 pb-4 sm:px-6"
-              >
-                {navLinks.map((link) => (
-                  <motion.a
-                    key={link.id}
-                    variants={menuItemVariants}
-                    href={`#${link.id}`}
-                    onClick={() => setMenuOpen(false)}
-                    className={`rounded-md px-3 py-2.5 text-sm transition-colors ${
-                      activeSection === link.id ? 'bg-white/[0.04] text-accent-300' : 'text-zinc-300 hover:bg-white/[0.04]'
-                    }`}
-                  >
-                    {link.label}
-                  </motion.a>
-                ))}
+              {navLinks.map((link) => (
                 <motion.a
-                  variants={menuCtaVariants}
-                  href="#contact"
+                  key={link.id}
+                  variants={menuItemVariants}
+                  href={`#${link.id}`}
                   onClick={() => setMenuOpen(false)}
-                  className="mt-2 rounded-md bg-accent-400 px-3 py-2.5 text-center text-sm font-semibold text-ink-950"
+                  className={`rounded-md px-3 py-2.5 text-sm transition-colors ${
+                    activeSection === link.id ? 'bg-white/[0.04] text-accent-300' : 'text-zinc-300 hover:bg-white/[0.04]'
+                  }`}
                 >
-                  Get in touch
+                  {link.label}
                 </motion.a>
-              </motion.div>
+              ))}
+              <motion.a
+                variants={menuCtaVariants}
+                href="#contact"
+                onClick={() => setMenuOpen(false)}
+                className="mt-2 rounded-md bg-accent-400 px-3 py-2.5 text-center text-sm font-semibold text-ink-950"
+              >
+                Get in touch
+              </motion.a>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
     </header>
   );
