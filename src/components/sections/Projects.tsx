@@ -8,7 +8,7 @@ import { SpotlightCard } from '../ui/SpotlightCard';
 
 export function Projects() {
   return (
-    <section id="projects" aria-labelledby="projects-heading" className="scroll-mt-24 py-24">
+    <section id="projects" aria-labelledby="projects-heading" className="scroll-mt-24 pt-12 pb-24">
       <Container>
         <SectionHeading
           id="projects-heading"

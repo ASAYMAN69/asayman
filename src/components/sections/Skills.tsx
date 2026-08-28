@@ -4,7 +4,7 @@ import { TechOrbit } from '../TechOrbit';
 
 export function Skills() {
   return (
-    <section id="skills" aria-labelledby="skills-heading" className="scroll-mt-24 py-24">
+    <section id="skills" aria-labelledby="skills-heading" className="scroll-mt-24 pt-24 pb-8">
       <Container>
         <SectionHeading
           id="skills-heading"

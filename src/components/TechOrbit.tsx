@@ -250,7 +250,7 @@ export function TechOrbit() {
   const radius = stage === 'detail' ? subRadius : mainRadius;
 
   return (
-    <div ref={orbitRef} className="relative mx-auto flex h-[500px] w-full max-w-xl items-center justify-center">
+    <div ref={orbitRef} className="relative mx-auto flex h-[420px] w-full max-w-xl items-center justify-center">
       <OrbitRing stage={stage} mainRadius={mainRadius} subRadius={subRadius} reduceMotion={reduceMotion} />
       <CenterCore stage={stage} node={active} onStart={() => setStage('orbit')} onBack={handleBack} />
 
