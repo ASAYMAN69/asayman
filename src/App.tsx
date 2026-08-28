@@ -41,6 +41,16 @@ function resolveRoute(): { is404: boolean; targetId: string | null } {
   return { is404: true, targetId: null };
 }
 
+const DEFAULT_TITLE = 'AS Ayman — AI Automation Entrepreneur & Full-Stack Engineer';
+
+const SECTION_TITLES: Record<string, string> = {
+  about: 'About | AS Ayman — AI Automation Developer',
+  skills: 'Skills & Tech Stack | AS Ayman',
+  projects: 'Projects & Work | AS Ayman',
+  gallery: 'Gallery | AS Ayman',
+  contact: 'Contact | AS Ayman — AI Automation Developer',
+};
+
 export default function App() {
   const [introDone, setIntroDone] = useState(false);
   const [{ is404, targetId }, setRoute] = useState(() => resolveRoute());
@@ -59,6 +69,20 @@ export default function App() {
       window.removeEventListener('popstate', onLocationChange);
     };
   }, []);
+
+  // Update document.title based on active route/section
+  useEffect(() => {
+    if (is404) {
+      document.title = '404: Page Not Found | AS Ayman';
+      return;
+    }
+    const target = targetId || window.location.hash.slice(1);
+    if (target && SECTION_TITLES[target]) {
+      document.title = SECTION_TITLES[target];
+    } else {
+      document.title = DEFAULT_TITLE;
+    }
+  }, [is404, targetId]);
 
   // Scroll to target section when route is valid
   useEffect(() => {
