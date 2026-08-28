@@ -13,28 +13,63 @@ import { SECTION_IDS } from './hooks/useActiveSection';
 
 const KNOWN_HASHES = new Set<string>(['', 'top', 'main', ...SECTION_IDS]);
 
+const SERVICE_ALIASES: Record<string, string> = {
+  'ai-agents': 'projects',
+  'whatsapp-automation': 'projects',
+  'crm-automation': 'projects',
+  'web-development': 'projects',
+};
+
+function resolveRoute(): { is404: boolean; targetId: string | null } {
+  const rawPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const hash = window.location.hash.slice(1);
+
+  if (rawPath === '/' || rawPath === '/index.html') {
+    const unknown = !KNOWN_HASHES.has(hash);
+    return { is404: unknown, targetId: hash || null };
+  }
+
+  const cleanPath = rawPath.slice(1);
+  if ((SECTION_IDS as readonly string[]).includes(cleanPath)) {
+    return { is404: false, targetId: cleanPath };
+  }
+
+  if (SERVICE_ALIASES[cleanPath]) {
+    return { is404: false, targetId: SERVICE_ALIASES[cleanPath] };
+  }
+
+  return { is404: true, targetId: null };
+}
+
 export default function App() {
   const [introDone, setIntroDone] = useState(false);
-  const [is404, setIs404] = useState(() => !KNOWN_HASHES.has(window.location.hash.slice(1)));
+  const [{ is404, targetId }, setRoute] = useState(() => resolveRoute());
 
   useEffect(() => {
-    const onHashChange = () => {
-      const unknown = !KNOWN_HASHES.has(window.location.hash.slice(1));
-      setIs404(unknown);
-      if (unknown) window.scrollTo(0, 0);
+    const onLocationChange = () => {
+      const route = resolveRoute();
+      setRoute(route);
+      if (route.is404) window.scrollTo(0, 0);
     };
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+
+    window.addEventListener('hashchange', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', onLocationChange);
+      window.removeEventListener('popstate', onLocationChange);
+    };
   }, []);
 
-  // When the 404 clears, the sections mount after the hashchange event, so the
-  // browser's native anchor jump misses — scroll the target in ourselves.
+  // Scroll to target section when route is valid
   useEffect(() => {
     if (is404) return;
-    const hash = window.location.hash.slice(1);
-    const el = hash ? document.getElementById(hash) : null;
-    if (el) el.scrollIntoView();
-  }, [is404]);
+    const target = targetId || window.location.hash.slice(1);
+    if (!target) return;
+    const el = document.getElementById(target);
+    if (el) {
+      setTimeout(() => el.scrollIntoView(), 50);
+    }
+  }, [is404, targetId]);
 
   if (is404) return <NotFound />;
 
