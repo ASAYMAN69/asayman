@@ -86,7 +86,7 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
 
       <motion.div style={{ y: reduceMotion ? 0 : contentY, opacity: reduceMotion ? 1 : contentOpacity }} className="relative w-full">
         <Container className="relative grid items-center gap-14 lg:grid-cols-[1.2fr_0.8fr]">
-        <div>
+        <div className="order-2 lg:order-1">
           <motion.h1
             {...useFadeUp(0.08)}
             className="text-5xl font-semibold tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl"
@@ -124,7 +124,7 @@ export function Hero({ introDone = false }: { introDone?: boolean }) {
         </div>
 
         {/* Photo / ASCII decrypt frame */}
-        <motion.div {...useFadeUp(0.2)} className="mx-auto w-full max-w-sm lg:max-w-none">
+        <motion.div {...useFadeUp(0.2)} className="order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-none">
           <div className="relative">
             <div
               aria-hidden="true"
